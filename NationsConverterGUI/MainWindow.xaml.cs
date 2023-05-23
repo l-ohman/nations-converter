@@ -457,7 +457,9 @@ namespace NationsConverterGUI
                     {
                         converter.Convert(map.Map, version);
 
-                        map.GBX.Save($"output/{System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetFileNameWithoutExtension(map.GBX.FileName))}.Map.Gbx");
+                        string newFileName = $"C:\\Users\\lohma\\Desktop\\converter_maps_test\\output\\{System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetFileNameWithoutExtension(map.GBX.FileName))}.Map.Gbx";
+                        map.GBX.Save(newFileName);
+                        //string fullPath = System.IO.Path.GetFullPath(newFileName);
 
                         map.Converted = true;
 

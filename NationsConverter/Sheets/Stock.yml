@@ -90,7 +90,10 @@ Blocks:
   StadiumRoadMainBirds: [ RoadTechStraight ]
 
   StadiumRoadMainCheckpoint: [ RoadTechCheckpoint ]
-  StadiumRoadMainStartLine: [ RoadTechStart ]
+  StadiumRoadMainStartLine:
+  - Block:
+      Name: RoadTechStart
+      OffsetY: -1
   StadiumRoadMainFinishLine: [ RoadTechFinish ]
   StadiumRoadMainStartFinishLine: [ RoadTechMultilap ]
   StadiumGrassCheckpoint: [ PlatformGrassCheckpoint ]

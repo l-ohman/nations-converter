@@ -16350,12 +16350,24 @@
   },
   "RoadTechStart": {
     "Air": [
-      { "Coord": [0, 0, 0], "Clips": ["RoadTechFC", "", "", ""] },
-      { "Coord": [0, 1, 0] }
+      {
+        "Coord": [ 0, 0, 0 ],
+        "Clips": [ "TrackWallDeadendRoundFCB", "", "", "" ]
+      },
+      {
+        "Coord": [ 0, 1, 0 ],
+        "Clips": [ "", "", "RoadTechFC", "" ]
+      }
     ],
     "Ground": [
-      { "Coord": [0, 0, 0], "Clips": ["RoadTechFC", "", "", ""] },
-      { "Coord": [0, 1, 0] }
+      {
+        "Coord": [ 1, -1, 1 ],
+        "Clips": [ "TrackToGrassDeadendRoundFCBGround", "", "", "" ]
+      },
+      {
+        "Coord": [ 0, 0, 1 ],
+        "Clips": [ "", "", "RoadTechFC", "" ]
+      }
     ]
   },
   "RoadTechFinish": {

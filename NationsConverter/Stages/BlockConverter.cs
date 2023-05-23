@@ -28,7 +28,10 @@ namespace NationsConverter.Stages
 
             var blocks = map.Blocks.ToList();
             map.Blocks.Clear();
-
+            
+            //initializing BakedBlocks (0x048)
+            var bakedBlocks = new List<CGameCtnBlock>();
+            
             foreach (var block in blocks)
             {
                 if (parameters.Definitions.TryGetValue(block.Name, out Conversion[] variants)) // If the block has a definition in the sheet, return the possible variants
@@ -58,6 +61,18 @@ namespace NationsConverter.Stages
                     log.Add($"Missing block: {block.Name}");
             }
 
+            if (bakedBlocks.Count != 0)
+            {
+                //map.CreateChunk<CGameCtnChallenge.Chunk03043048>();
+
+                // When adding the chunk manually (above), it throws an error when saving the file.
+                // However, if the chunk is added *before* conversion (such as with GBX Explorer)...
+                // ...the baked blocks can be added if DiscoverAllChunks is called BEFORE setting map.BakedBlocks.
+
+                map.DiscoverAllChunks(); // unsure what this actually does
+                map.BakedBlocks = bakedBlocks.ToArray();    
+            }
+            
             /*void PlaceMacroblock(CGameCtnBlock referenceBlock, CGameCtnMacroBlockInfo macroblock)
             {
                 foreach(var block in macroblock.Blocks)
@@ -364,6 +379,7 @@ namespace NationsConverter.Stages
             CGameCtnBlock ConvertBlock(CGameCtnBlock referenceBlock, Conversion conversion, ConversionBlock conversionBlock,
                 Int3? newCoord = null)
             {
+                // The maps that run blocks through this function are the ones that crash
                 var block = new CGameCtnBlock(conversionBlock.Name,
                     referenceBlock.Direction,
                     referenceBlock.Coord,
@@ -474,6 +490,38 @@ namespace NationsConverter.Stages
                     }
                 }
 
+                var blockModelExists = BlockInfoManager.BlockModels.TryGetValue(block.Name, out BlockModel blockModel);
+                if (blockModelExists)
+                {
+                    if (blockModel.Ground.Length > 1)
+                    {
+                        foreach (var unit in blockModel.Ground)
+                        {
+                            if (unit.Clips == null) continue;
+                            for (int i = 0; i < unit.Clips.Length; i++)
+                            {
+                                var clip = unit.Clips[i];
+                                if (clip.Length == 0) continue;
+
+                                var clipCoords = new Int3(
+                                        block.Coord.X + unit.Coord[0],
+                                        block.Coord.Y + unit.Coord[1],
+                                        block.Coord.Z + unit.Coord[2]
+                                    );
+                                var clipDirection = (Direction)(((int)block.Direction + i) % 4);
+
+                                var clipBlock = new CGameCtnBlock(clip,
+                                    clipDirection,
+                                    clipCoords,
+                                    0)
+                                { IsGround = false, Flags = 0 };
+                                bakedBlocks.Add(clipBlock);
+                            }
+                        }
+                    }
+                }
+                // return x.XZ == referenceBlock.Coord.XZ;
+
                 block.IsGround = false;
 
                 if (conversionBlock.Flags.HasValue)
@@ -483,6 +531,8 @@ namespace NationsConverter.Stages
 
                 return block;
             }
+
+            //
 
             var sortedLog = log.ToList();
             sortedLog.Sort();
