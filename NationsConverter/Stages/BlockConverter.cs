@@ -399,7 +399,7 @@ namespace NationsConverter.Stages
                             block.Coord += (Int3)conversionBlock.OffsetCoord;
                 }
 
-                block.Coord += (0, conversionBlock.OffsetY, 0);
+                block.Coord += (8, conversionBlock.OffsetY, 8);
 
                 if (conversion.OffsetDir != 0)
                     block.Direction = (Direction)(((int)block.Direction + conversion.OffsetDir) % 4);
@@ -493,6 +493,7 @@ namespace NationsConverter.Stages
                 var blockModelExists = BlockInfoManager.BlockModels.TryGetValue(block.Name, out BlockModel blockModel);
                 if (blockModelExists)
                 {
+                    // TODO: add air variants
                     if (blockModel.Ground.Length > 1)
                     {
                         foreach (var unit in blockModel.Ground)
@@ -520,7 +521,6 @@ namespace NationsConverter.Stages
                         }
                     }
                 }
-                // return x.XZ == referenceBlock.Coord.XZ;
 
                 block.IsGround = false;
 
@@ -531,8 +531,6 @@ namespace NationsConverter.Stages
 
                 return block;
             }
-
-            //
 
             var sortedLog = log.ToList();
             sortedLog.Sort();
