@@ -399,7 +399,8 @@ namespace NationsConverter.Stages
                             block.Coord += (Int3)conversionBlock.OffsetCoord;
                 }
 
-                block.Coord += (8, conversionBlock.OffsetY, 8);
+                // need to find where to do this for everything - not just blocks
+                block.Coord += (0, conversionBlock.OffsetY, 0);
 
                 if (conversion.OffsetDir != 0)
                     block.Direction = (Direction)(((int)block.Direction + conversion.OffsetDir) % 4);
